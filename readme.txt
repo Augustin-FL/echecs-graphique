@@ -1,4 +1,4 @@
-Jeu d'echec en C - by gusfl (Augustin Favin-Lévêque)
+Jeu d'echec en C - by gusfl 
 ====================================================
 
 
