@@ -4,6 +4,8 @@
 #include <SDL/SDL_rotozoom.h>
 
 /*
+V 1.0
+ 
 compilé avec GCC pour windows(via mingw32)
 
 linké avec :
