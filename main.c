@@ -73,7 +73,7 @@ int attendre_clic_fin_partie(int message);
 // 2. FONCTIONS "D'AFFICHAGE"
 // ##########################
 
-void init_plateau();//affiche le plateau la 1ere fois
+void init_plateau(char *argv_0);//affiche le plateau la 1ere fois
 void afficher_sprite(int x, int y);//affiche le sprite(l'image corresponant à la pièce) qui se trouve sur la case (x,y)
 void dessiner_case_damier(int x,int y);//dessine la case (x,y) du damier
 void dessiner_rectangle(Uint32 couleur, int x_min,int y_min,int x_max,int y_max);//dessine un rectangle (pixel par pixel)
@@ -112,7 +112,7 @@ int main(int argc, char *argv[])
 {
 	int decision_joueur_x,decision_joueur_y, decision_joueur_finale_x, decision_joueur_finale_y,joueur, a_joue=0,mat_nul=0;
 	
-	init_plateau();
+	init_plateau(argv[0]);
 	attendre_clic_debut_partie();
 	
 	while(continuer && mat_nul==0)
@@ -248,7 +248,7 @@ int attendre_choix_deplacement_piece(int x,int y,int *position_finale_x,int *pos
 		else if ((evenement.type == SDL_MOUSEBUTTONDOWN) && (evenement.button.button == SDL_BUTTON_LEFT)) clic = 1; // Sinon si l'utilisateur a bougé la souris et cliqué avec le bouton gauche.
 		else if(evenement.type == SDL_QUIT)continuer = 0;
 		else if(evenement.type == SDL_VIDEORESIZE)resizer_ecran(evenement.resize.w,evenement.resize.h);
-		else if(evenement.type == SDL_KEYDOWN && evenement.key.keysym.sym == SDLK_ESCAPE || piece_indeplacable)
+		else if((evenement.type == SDL_KEYDOWN && evenement.key.keysym.sym == SDLK_ESCAPE) || piece_indeplacable)
 		{
 			if(jeu_en_pause==0)
 			{
@@ -427,9 +427,9 @@ int attendre_clic_fin_partie(int message)
 //---------------------
 //fonctions graphiques
 //---------------------
-void init_plateau()
+void init_plateau(char *argv_0)
 {
-	int x=0,y=0;
+	int x=0,y=0,i=0;
 	
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);//lancement des moteurs SDL graphique+timer, creation de la fenêtre.
 	ecran = SDL_SetVideoMode(largeur_fenetre, hauteur_fenetre, 32, SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_RESIZABLE);
@@ -437,9 +437,20 @@ void init_plateau()
 	
 	dessiner_rectangle(noir,0,0,largeur_fenetre-1,hauteur_fenetre-1);
 	
-	image=SDL_LoadBMP("pieces.bmp");
-	SDL_SetColorKey(image, SDL_SRCCOLORKEY, SDL_MapRGB(image->format, 255, 255, 255));
+	for(i=strlen(argv_0);argv_0[i]!='/' && argv_0[i]!='\\';i--) 
+		argv_0[i]='\0';
+	
+	strcat(argv_0,"pieces.bmp");
 
+	image=SDL_LoadBMP(argv_0);
+	if(image==NULL)
+	{
+		printf("erreur ! pieces.bmp introuvable, %s\n",argv_0);
+		system("pause");
+	}
+	SDL_SetColorKey(image, SDL_SRCCOLORKEY, SDL_MapRGB(image->format, 255, 255, 255));
+	
+	
 	SDL_SetAlpha(image, SDL_SRCALPHA, 200);
 	//la transparance de l'image
 	
@@ -1038,7 +1049,7 @@ int verifier_mat_nul(int joueur)
 		}
 	}
 	
-	if(nul || pat && !echec)return 3;
+	if(nul || (pat && !echec))return 3;
 	else if(pat && echec)
 	{
 		if(joueur==JOUEUR_BLANC) return 4;
@@ -1301,7 +1312,7 @@ void deplacer_piece(int x,int y,int x_final,int y_final)
 	) 
 		deplacer_piece(7,i,5,i);
 	
-	if((y==3 ||y==4) && (cases[x_final][y].joueur==JOUEUR_NOIR && cases[x][y].joueur==JOUEUR_BLANC || cases[x_final][y].joueur==JOUEUR_BLANC && cases[x][y].joueur==JOUEUR_NOIR) && cases[x][y].piece==PION && (y_final==y+1 || y_final==y-1)&& (x_final==x-1 || x_final==x+1))
+	if((y==3 ||y==4) && ((cases[x_final][y].joueur==JOUEUR_NOIR && cases[x][y].joueur==JOUEUR_BLANC) || (cases[x_final][y].joueur==JOUEUR_BLANC && cases[x][y].joueur==JOUEUR_NOIR)) && cases[x][y].piece==PION && (y_final==y+1 || y_final==y-1) && (x_final==x-1 || x_final==x+1))
 	{
 		cases[x_final][y].joueur=0;
 		cases[x_final][y].piece=0;
@@ -1349,8 +1360,8 @@ void deplacer_piece(int x,int y,int x_final,int y_final)
 	}
 	
 	if(cases[x_final][y_final].piece==PION && 
-	(cases[x_final][y_final].joueur==JOUEUR_BLANC && y_final==0 ||
-	cases[x_final][y_final].joueur==JOUEUR_NOIR && y_final==7)
+	((cases[x_final][y_final].joueur==JOUEUR_BLANC && y_final==0) ||
+	(cases[x_final][y_final].joueur==JOUEUR_NOIR && y_final==7))
 	)
 	{
 		attendre_choix_adoubement_piece(x_final,y_final);
