@@ -4,19 +4,26 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING .ISS SCRIPT FILES!
 
 [Setup]
-AppName=GestNotes
+AppName=Echec Graphique
 AppVersion=1.5
-DefaultDirName={pf}\GestNotes
-DefaultGroupName=GestNotes
-UninstallDisplayIcon={app}\GestNotes.exe
+DefaultDirName={pf}\Echecs Graphique
+DefaultGroupName=Echecs Graphique
+UninstallDisplayIcon={app}\Echecs Graphique.exe
 Compression=lzma2
 SolidCompression=yes
-OutputDir=userdocs:Inno Setup Examples Output
+OutputDir=.
 
 [Files]
-Source: "MyProg.exe"; DestDir: "{app}"
-Source: "MyProg.chm"; DestDir: "{app}"
-Source: "Readme.txt"; DestDir: "{app}"; Flags: isreadme
+Source: "libfreetype-6.dll"; DestDir: "{app}"
+Source: "libgcc_s_dw2-1.dll"; DestDir: "{app}"
+Source: "main.exe"; DestDir: "{app}"
+Source: "README.md"; DestDir: "{app}"
+Source: "SDL.dll"; DestDir: "{app}"
+Source: "SDL_ttf.dll"; DestDir: "{app}"
+Source: "zlib1.dll"; DestDir: "{app}"
+Source: "verdana.ttf"; DestDir: "{app}"
+Source: "pieces.bmp"; DestDir: "{app}"
+
 
 [Icons]
-Name: "{group}\My Program"; Filename: "{app}\MyProg.exe"
+Name: "{group}\Echecs Graphique"; Filename: "{app}\main.exe"
