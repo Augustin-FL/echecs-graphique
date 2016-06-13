@@ -15,7 +15,7 @@ Vous avez trouvé un bug? n'hésitez pas a déposer une issue sur GitHub ;)
 
 
 #Compilation 
-Pour compiler le programme, il faut installer une version modifié de la SDL 1.2 (accessible ici : https://mega.co.nz/#!81UWUD7A!wqXqU-guSYGcNhRQyDTgu0unlqx2OxVaXFJT15ejwtA ), la librairie SDL_GFX, SDL_TTF, et SDL_IMAGE
+Pour compiler le programme, il faut installer la SDL 1.2, la librairie SDL_GFX, SDL_TTF, et SDL_IMAGE
 
 les parametres de compilation sont :```-O2 -Wall -D_GNU_SOURCE=1 -Dmain=SDL_main -DNO_STDIO_REDIRECT```
 Et ceux du linker sont : ```-lmingw32 -lSDLmain -lSDL  -DNO_STDIO_REDIRECT -lm -lSDL_ttf -lSDL_gfx -lSDL_image```
